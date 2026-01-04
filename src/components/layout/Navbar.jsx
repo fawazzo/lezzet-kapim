@@ -161,7 +161,7 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
                   className={`absolute right-0 w-48 bg-white rounded-md shadow-xl transition duration-300 ${
                     isLoginOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
                   }`}
-                  style={{ marginTop: 0 }}
+                  // Removed style={{ marginTop: 0 }}
                 > 
                   <Link to="/customer/login" className="block px-4 py-2 text-primary-dark hover:bg-gray-100 rounded-t-md" onClick={() => setIsLoginOpen(false)}>
                     {/* Bağlantı Metni Çevirisi */}
@@ -194,7 +194,7 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
                   className={`absolute right-0 w-48 bg-white rounded-md shadow-xl transition duration-300 ${
                     isRegisterOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
                   }`}
-                  style={{ marginTop: 0 }}
+                  // Removed style={{ marginTop: 0 }}
                 >
                   <Link to="/customer/register" className="block px-4 py-2 text-primary-dark hover:bg-gray-100 rounded-t-md" onClick={() => setIsRegisterOpen(false)}>
                     {/* Bağlantı Metni Çevirisi */}
