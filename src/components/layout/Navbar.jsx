@@ -1,15 +1,26 @@
 // src/components/layout/Navbar.jsx
-import React from 'react';
+import React, { /* REMOVED useState, useRef, useEffect */ } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { ShoppingCart } from 'lucide-react'; 
+import { ShoppingCart } from 'lucide-react'; // Added lucide-react icon
 
 // ADDED new props: onCartClick, cartItemCount
 const Navbar = ({ onCartClick, cartItemCount }) => {
   const { isAuthenticated, role, logout, user } = useAuth();
   const navigate = useNavigate();
   
+  /* REMOVED: State, Refs, and Effects for dropdown management
+  // const [isLoginOpen, setIsLoginOpen] = useState(false);
+  // const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  // const loginRef = useRef(null);
+  // const registerRef = useRef(null);
+  // useEffect(() => { ... }, []); 
+  // const toggleLogin = (e) => { ... };
+  // const toggleRegister = (e) => { ... };
+  */
+
   // MODIFIED: Handlers now navigate directly to a new options page/route
+  // You must create these routes and components (e.g., LoginOptionsPage, RegisterOptionsPage)
   const handleLoginClick = () => {
     // Navigate to a dedicated page/route that shows the three login options
     navigate('/login-options');
@@ -28,12 +39,12 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
   const getDashboardPath = () => {
     if (role === 'customer') return '/customer/dashboard';
     if (role === 'restaurant') return '/restaurant/dashboard';
-    if (role === 'delivery') return '/delivery/dashboard';
+    if (role === 'delivery') return '/delivery/dashboard'; // ADDED: Delivery Dashboard
     return '/';
   };
 
   // Determine the display location
-  const displayIl = user?.il || 'Şehir Seçiniz'; 
+  const displayIl = user?.il || 'Şehir Seçiniz'; // Changed to Turkish default
   
   // Define styles for the location display (using simple text)
   const locationDisplay = (
@@ -115,29 +126,29 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
               {/* Not Logged In Links / Giriş Yapılmamış Bağlantılar */}
               
               {/* Giriş Yap - Direct Navigation to Options Page */}
+              {/* Removed ref and dropdown structure */}
               <div className="relative">
                 <button 
                   onClick={handleLoginClick} // MODIFIED: Use new handler
                   className="text-white hover:text-secondary-light px-2 py-1.5"
-                  // TEMP DEBUG: Add a distinct border for mobile troubleshooting
-                  // style={{ border: '2px solid yellow' }} 
                 >
                   {/* Buton Metni Çevirisi */}
                   Giriş Yap
                 </button>
+                {/* REMOVED: Dropdown content */}
               </div>
 
               {/* Kaydol - Direct Navigation to Options Page */}
+              {/* Removed ref and dropdown structure */}
               <div className="relative">
                 <button 
                   onClick={handleRegisterClick} // MODIFIED: Use new handler
                   className="bg-primary-dark text-white font-semibold py-1.5 px-4 rounded-full shadow-lg hover:bg-primary-dark/90 transition duration-200"
-                  // TEMP DEBUG: Add a distinct border for mobile troubleshooting
-                  // style={{ border: '2px solid lime' }} 
                 >
                   {/* Buton Metni Çevirisi */}
                   Kaydol
                 </button>
+                {/* REMOVED: Dropdown content */}
               </div>
             </>
           )}
