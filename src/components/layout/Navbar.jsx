@@ -20,26 +20,33 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
   // ADDED Function to close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
-      if (loginRef.current && !loginRef.current.contains(event.target)) {
+      // Check if the click is outside BOTH dropdown areas
+      const isOutsideLogin = loginRef.current && !loginRef.current.contains(event.target);
+      const isOutsideRegister = registerRef.current && !registerRef.current.contains(event.target);
+      
+      if (isOutsideLogin) {
         setIsLoginOpen(false);
       }
-      if (registerRef.current && !registerRef.current.contains(event.target)) {
+      if (isOutsideRegister) {
         setIsRegisterOpen(false);
       }
     }
+    // Using 'mousedown' is generally better for dropdowns than 'click'
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
-  // ADDED Toggle Handlers
-  const toggleLogin = () => {
+  // MODIFIED: Toggle Handlers with e.stopPropagation() for mobile reliability
+  const toggleLogin = (e) => {
+    e.stopPropagation(); // Prevents the click from immediately triggering handleClickOutside on document
     setIsLoginOpen(!isLoginOpen);
     setIsRegisterOpen(false); // Close the other one
   };
 
-  const toggleRegister = () => {
+  const toggleRegister = (e) => {
+    e.stopPropagation(); // Prevents the click from immediately triggering handleClickOutside on document
     setIsRegisterOpen(!isRegisterOpen);
     setIsLoginOpen(false); // Close the other one
   };
