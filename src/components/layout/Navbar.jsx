@@ -1,35 +1,16 @@
 // src/components/layout/Navbar.jsx
-import React, { /* REMOVED useState, useRef, useEffect */ } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { ShoppingCart } from 'lucide-react'; // Added lucide-react icon
+import { ShoppingCart } from 'lucide-react';
 
-// ADDED new props: onCartClick, cartItemCount
 const Navbar = ({ onCartClick, cartItemCount }) => {
   const { isAuthenticated, role, logout, user } = useAuth();
   const navigate = useNavigate();
   
-  /* REMOVED: State, Refs, and Effects for dropdown management
-  // const [isLoginOpen, setIsLoginOpen] = useState(false);
-  // const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-  // const loginRef = useRef(null);
-  // const registerRef = useRef(null);
-  // useEffect(() => { ... }, []); 
-  // const toggleLogin = (e) => { ... };
-  // const toggleRegister = (e) => { ... };
-  */
-
-  // MODIFIED: Handlers now navigate directly to a new options page/route
-  // You must create these routes and components (e.g., LoginOptionsPage, RegisterOptionsPage)
-  const handleLoginClick = () => {
-    // Navigate to a dedicated page/route that shows the three login options
-    navigate('/login-options');
-  };
-
-  const handleRegisterClick = () => {
-    // Navigate to a dedicated page/route that shows the three registration options
-    navigate('/register-options');
-  };
+  // REMOVED: Unnecessary click handlers for login and register
+  // const handleLoginClick = () => { ... };
+  // const handleRegisterClick = () => { ... };
   
   const handleLogout = () => {
     logout();
@@ -39,17 +20,14 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
   const getDashboardPath = () => {
     if (role === 'customer') return '/customer/dashboard';
     if (role === 'restaurant') return '/restaurant/dashboard';
-    if (role === 'delivery') return '/delivery/dashboard'; // ADDED: Delivery Dashboard
+    if (role === 'delivery') return '/delivery/dashboard';
     return '/';
   };
 
-  // Determine the display location
-  const displayIl = user?.il || 'Şehir Seçiniz'; // Changed to Turkish default
+  const displayIl = user?.il || 'Şehir Seçiniz';
   
-  // Define styles for the location display (using simple text)
   const locationDisplay = (
     <div className="flex items-center space-x-1 text-white bg-primary-dark/50 py-1 px-3 rounded-full text-sm font-medium">
-      {/* Simple location indicator */}
       <span>📍</span> 
       <span>{displayIl}</span>
     </div>
@@ -60,18 +38,15 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
       <div className="container mx-auto px-4 flex justify-between items-center py-4">
         {/* Logo */}
         <Link to="/" className="text-white text-2xl font-bold tracking-wider hover:text-white/90">
-          {/* Logo Metni Çevirisi */}
           YEMEKSEPETİ CLONE
         </Link>
 
-        {/* Navigation Links / Navigasyon Bağlantıları */}
+        {/* Navigation Links */}
         <nav className="flex items-center space-x-6">
           <Link to="/" className="text-white hover:text-secondary-light transition duration-200">
-            {/* Bağlantı Metni Çevirisi */}
             Restoranlar
           </Link>
           
-          {/* Added Cart Button for Customers */}
           {role === 'customer' && (
             <button
                 onClick={onCartClick}
@@ -88,17 +63,14 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
           )}
 
           {isAuthenticated ? (
-            // Authenticated section starts here
+            // Authenticated section
             <>
-              {/* Display User/Restaurant IL */}
               {locationDisplay}
 
-              {/* Logged In Links / Giriş Yapılmış Bağlantılar */}
               <Link 
                 to={getDashboardPath()} 
                 className="text-white font-medium hover:text-secondary-light transition duration-200"
               >
-                {/* Kullanıcı Adı veya Kontrol Paneli Çevirisi */}
                 {user?.name || 'Kontrol Paneli'}
               </Link>
 
@@ -107,7 +79,6 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
                   to="/customer/orders" 
                   className="text-white hover:text-secondary-light transition duration-200"
                 >
-                  {/* Bağlantı Metni Çevirisi */}
                   Siparişlerim
                 </Link>
               )}
@@ -116,40 +87,29 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
                 onClick={handleLogout} 
                 className="bg-white text-primary-orange font-semibold py-1.5 px-4 rounded-full shadow-lg hover:bg-gray-100 transition duration-200"
               >
-                {/* Buton Metni Çevirisi */}
                 Çıkış Yap
               </button>
             </>
           ) : (
-            // Not Authenticated section starts here
+            // Not Authenticated section
             <>
-              {/* Not Logged In Links / Giriş Yapılmamış Bağlantılar */}
+              {/* Not Logged In Links */}
               
-              {/* Giriş Yap - Direct Navigation to Options Page */}
-              {/* Removed ref and dropdown structure */}
-              <div className="relative">
-                <button
-  onClick={handleLoginClick}
-  className="text-white hover:text-secondary-light px-2 py-1.5"
-  style={{ cursor: 'pointer' }} // Add this inline style for testing
->
-  Giriş Yap
-</button>
-                {/* REMOVED: Dropdown content */}
-              </div>
+              {/* MODIFIED: Changed Giriş Yap button to a Link */}
+              <Link
+                to="/login-options"
+                className="text-white hover:text-secondary-light transition duration-200"
+              >
+                Giriş Yap
+              </Link>
 
-              {/* Kaydol - Direct Navigation to Options Page */}
-              {/* Removed ref and dropdown structure */}
-              <div className="relative">
-                <button 
-                  onClick={handleRegisterClick} // MODIFIED: Use new handler
-                  className="bg-primary-dark text-white font-semibold py-1.5 px-4 rounded-full shadow-lg hover:bg-primary-dark/90 transition duration-200"
-                >
-                  {/* Buton Metni Çevirisi */}
-                  Kaydol
-                </button>
-                {/* REMOVED: Dropdown content */}
-              </div>
+              {/* MODIFIED: Changed Kaydol button to a Link */}
+              <Link
+                to="/register-options"
+                className="bg-primary-dark text-white font-semibold py-1.5 px-4 rounded-full shadow-lg hover:bg-primary-dark/90 transition duration-200"
+              >
+                Kaydol
+              </Link>
             </>
           )}
         </nav>
