@@ -18,6 +18,10 @@ import RestaurantRegister from './pages/auth/RestaurantRegister';
 import DeliveryLogin from './pages/auth/DeliveryLogin'; // NEW IMPORT
 import DeliveryRegister from './pages/auth/DeliveryRegister'; // NEW IMPORT
 
+// ADDED NEW IMPORTS FOR OPTIONS PAGES
+import LoginOptionsPage from './pages/auth/LoginOptionsPage'; 
+import RegisterOptionsPage from './pages/auth/RegisterOptionsPage';
+
 // Pages - Protected
 import CustomerDashboard from './pages/customer/CustomerDashboard';
 import CustomerOrders from './pages/customer/CustomerOrders';
@@ -32,6 +36,8 @@ import './App.css';
 
 // Component for Protected Routes based on Role
 const ProtectedRoute = ({ element, requiredRole }) => {
+// ... (rest of ProtectedRoute is unchanged)
+// ... (rest of ProtectedRoute is unchanged)
   const { isAuthenticated, role, loading } = useAuth();
   
   if (loading) return <div>Yükleniyor...</div>;
@@ -55,6 +61,8 @@ const ProtectedRoute = ({ element, requiredRole }) => {
 // --- Global App Content with Cart State ---
 const AppContent = () => {
     const { role, isAuthenticated, user } = useAuth();
+// ... (rest of AppContent state and functions are unchanged)
+// ... (rest of AppContent state and functions are unchanged)
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [cart, setCart] = useState([]); // Global Cart State
     const navigate = useNavigate();
@@ -237,6 +245,11 @@ const AppContent = () => {
                         />
                         
                         {/* Auth Routes */}
+                        
+                        {/* NEW ROUTES for Login/Register Options */}
+                        <Route path="/login-options" element={<LoginOptionsPage />} />
+                        <Route path="/register-options" element={<RegisterOptionsPage />} />
+
                         <Route path="/customer/login" element={<CustomerLogin />} />
                         <Route path="/customer/register" element={<CustomerRegister />} />
                         <Route path="/restaurant/login" element={<RestaurantLogin />} />
@@ -274,6 +287,10 @@ const AppContent = () => {
                         {role === 'customer' && <Route path="/login" element={<Navigate to="/customer/dashboard" />} />}
                         {role === 'restaurant' && <Route path="/login" element={<Navigate to="/restaurant/dashboard" />} />}
                         {role === 'delivery' && <Route path="/login" element={<Navigate to="/delivery/dashboard" />} />} {/* ADDED */}
+                        
+                        {/* Also redirect from the options pages if already logged in */}
+                        {isAuthenticated && <Route path="/login-options" element={<Navigate to={role === 'customer' ? '/customer/dashboard' : role === 'restaurant' ? '/restaurant/dashboard' : '/delivery/dashboard'} />} />}
+                        {isAuthenticated && <Route path="/register-options" element={<Navigate to={role === 'customer' ? '/customer/dashboard' : role === 'restaurant' ? '/restaurant/dashboard' : '/delivery/dashboard'} />} />}
 
                     </Routes>
                 </div>
