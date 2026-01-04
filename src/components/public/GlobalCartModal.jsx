@@ -473,12 +473,29 @@ const GlobalCartModal = ({ cart, updateQuantity, removeFromCart, handleCheckout,
     );
 
     return (
-<div className="fixed inset-0 bg-black/20 z-[100] flex justify-end">
-            <div className="bg-white h-full w-full md:w-1/3 shadow-2xl transform transition-transform duration-300 ease-in-out p-6 flex flex-col">
-                {checkoutStep === 'cart' ? <CartStep /> : <PaymentStep />}
-            </div>
-        </div>
-    );
+  <>
+    {/* BACKDROP */}
+    <div
+      className="fixed inset-0 bg-black/30 z-40"
+      onClick={onClose}
+    />
+
+    {/* DRAWER */}
+    <div
+      className="
+        fixed top-0 right-0
+        h-full w-full md:w-1/3
+        bg-white shadow-2xl
+        z-50
+        p-6
+        flex flex-col
+      "
+    >
+      {checkoutStep === 'cart' ? <CartStep /> : <PaymentStep />}
+    </div>
+  </>
+);
+
 };
 
 export default GlobalCartModal;
