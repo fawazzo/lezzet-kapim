@@ -1,5 +1,5 @@
 // src/components/layout/Navbar.jsx
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react'; // ADDED useState, useRef, useEffect
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { ShoppingCart } from 'lucide-react'; // Added lucide-react icon
@@ -8,7 +8,42 @@ import { ShoppingCart } from 'lucide-react'; // Added lucide-react icon
 const Navbar = ({ onCartClick, cartItemCount }) => {
   const { isAuthenticated, role, logout, user } = useAuth();
   const navigate = useNavigate();
+  
+  // ADDED State for managing dropdown visibility
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
+  // ADDED Refs to detect clicks outside the dropdowns
+  const loginRef = useRef(null);
+  const registerRef = useRef(null);
+
+  // ADDED Function to close dropdowns when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (loginRef.current && !loginRef.current.contains(event.target)) {
+        setIsLoginOpen(false);
+      }
+      if (registerRef.current && !registerRef.current.contains(event.target)) {
+        setIsRegisterOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // ADDED Toggle Handlers
+  const toggleLogin = () => {
+    setIsLoginOpen(!isLoginOpen);
+    setIsRegisterOpen(false); // Close the other one
+  };
+
+  const toggleRegister = () => {
+    setIsRegisterOpen(!isRegisterOpen);
+    setIsLoginOpen(false); // Close the other one
+  };
+  
   const handleLogout = () => {
     logout();
     navigate('/');
@@ -39,7 +74,7 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
         {/* Logo */}
         <Link to="/" className="text-white text-2xl font-bold tracking-wider hover:text-white/90">
           {/* Logo Metni Çevirisi */}
-          lezzet kapım
+          YEMEKSEPETİ CLONE
         </Link>
 
         {/* Navigation Links / Navigasyon Bağlantıları */}
@@ -102,46 +137,67 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
             // Not Authenticated section starts here
             <>
               {/* Not Logged In Links / Giriş Yapılmamış Bağlantılar */}
-              <div className="group relative">
-                <button className="text-white hover:text-secondary-light px-2 py-1.5">
+              
+              {/* Giriş Yap - Click-to-Open Dropdown */}
+              {/* Ref added for outside click detection */}
+              <div className="relative" ref={loginRef}>
+                {/* Click handler added to button */}
+                <button 
+                  onClick={toggleLogin} 
+                  className="text-white hover:text-secondary-light px-2 py-1.5"
+                >
                   {/* Buton Metni Çevirisi */}
                   Giriş Yap
                 </button>
-                {/* Set top margin to '0' to ensure no gap between button and dropdown */}
-                <div className="absolute right-0 w-48 bg-white rounded-md shadow-xl opacity-0 group-hover:opacity-100 transition duration-300 pointer-events-none group-hover:pointer-events-auto"
-                     style={{ marginTop: 0 }}> 
-                  <Link to="/customer/login" className="block px-4 py-2 text-primary-dark hover:bg-gray-100 rounded-t-md">
+                {/* Conditional visibility based on state */}
+                <div 
+                  className={`absolute right-0 w-48 bg-white rounded-md shadow-xl transition duration-300 ${
+                    isLoginOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+                  }`}
+                  style={{ marginTop: 0 }}
+                > 
+                  <Link to="/customer/login" className="block px-4 py-2 text-primary-dark hover:bg-gray-100 rounded-t-md" onClick={() => setIsLoginOpen(false)}>
                     {/* Bağlantı Metni Çevirisi */}
                     Müşteri Girişi
                   </Link>
-                  <Link to="/restaurant/login" className="block px-4 py-2 text-primary-dark hover:bg-gray-100">
+                  <Link to="/restaurant/login" className="block px-4 py-2 text-primary-dark hover:bg-gray-100" onClick={() => setIsLoginOpen(false)}>
                     {/* Bağlantı Metni Çevirisi */}
                     Restoran Girişi
                   </Link>
-                  <Link to="/delivery/login" className="block px-4 py-2 text-primary-dark hover:bg-gray-100 rounded-b-md"> {/* ADDED */}
+                  <Link to="/delivery/login" className="block px-4 py-2 text-primary-dark hover:bg-gray-100 rounded-b-md" onClick={() => setIsLoginOpen(false)}>
                     {/* Bağlantı Metni Çevirisi */}
                     Teslimatçı Girişi
                   </Link>
                 </div>
               </div>
 
-              <div className="group relative">
-                <button className="bg-primary-dark text-white font-semibold py-1.5 px-4 rounded-full shadow-lg hover:bg-primary-dark/90 transition duration-200">
+              {/* Kaydol - Click-to-Open Dropdown */}
+              {/* Ref added for outside click detection */}
+              <div className="relative" ref={registerRef}>
+                {/* Click handler added to button */}
+                <button 
+                  onClick={toggleRegister} 
+                  className="bg-primary-dark text-white font-semibold py-1.5 px-4 rounded-full shadow-lg hover:bg-primary-dark/90 transition duration-200"
+                >
                   {/* Buton Metni Çevirisi */}
                   Kaydol
                 </button>
-                {/* Set top margin to '0' to ensure no gap between button and dropdown */}
-                <div className="absolute right-0 w-48 bg-white rounded-md shadow-xl opacity-0 group-hover:opacity-100 transition duration-300 pointer-events-none group-hover:pointer-events-auto"
-                     style={{ marginTop: 0 }}>
-                  <Link to="/customer/register" className="block px-4 py-2 text-primary-dark hover:bg-gray-100 rounded-t-md">
+                {/* Conditional visibility based on state */}
+                <div 
+                  className={`absolute right-0 w-48 bg-white rounded-md shadow-xl transition duration-300 ${
+                    isRegisterOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+                  }`}
+                  style={{ marginTop: 0 }}
+                >
+                  <Link to="/customer/register" className="block px-4 py-2 text-primary-dark hover:bg-gray-100 rounded-t-md" onClick={() => setIsRegisterOpen(false)}>
                     {/* Bağlantı Metni Çevirisi */}
                     Müşteri Kaydı
                   </Link>
-                  <Link to="/restaurant/register" className="block px-4 py-2 text-primary-dark hover:bg-gray-100">
+                  <Link to="/restaurant/register" className="block px-4 py-2 text-primary-dark hover:bg-gray-100" onClick={() => setIsRegisterOpen(false)}>
                     {/* Bağlantı Metni Çevirisi */}
                     Restoran Kaydı
                   </Link>
-                  <Link to="/delivery/register" className="block px-4 py-2 text-primary-dark hover:bg-gray-100 rounded-b-md"> {/* ADDED */}
+                  <Link to="/delivery/register" className="block px-4 py-2 text-primary-dark hover:bg-gray-100 rounded-b-md" onClick={() => setIsRegisterOpen(false)}>
                     {/* Bağlantı Metni Çevirisi */}
                     Teslimatçı Kaydı
                   </Link>
