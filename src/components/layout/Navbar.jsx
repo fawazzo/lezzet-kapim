@@ -1,5 +1,5 @@
 // src/components/layout/Navbar.jsx
-import React, { useState, useRef, useEffect } from 'react'; // ADDED useState, useRef, useEffect
+import React, { /* REMOVED useState, useRef, useEffect */ } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { ShoppingCart } from 'lucide-react'; // Added lucide-react icon
@@ -9,46 +9,26 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
   const { isAuthenticated, role, logout, user } = useAuth();
   const navigate = useNavigate();
   
-  // ADDED State for managing dropdown visibility
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  /* REMOVED: State, Refs, and Effects for dropdown management
+  // const [isLoginOpen, setIsLoginOpen] = useState(false);
+  // const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  // const loginRef = useRef(null);
+  // const registerRef = useRef(null);
+  // useEffect(() => { ... }, []); 
+  // const toggleLogin = (e) => { ... };
+  // const toggleRegister = (e) => { ... };
+  */
 
-  // ADDED Refs to detect clicks outside the dropdowns
-  const loginRef = useRef(null);
-  const registerRef = useRef(null);
-
-  // ADDED Function to close dropdowns when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event) {
-      // Check if the click is outside BOTH dropdown areas
-      const isOutsideLogin = loginRef.current && !loginRef.current.contains(event.target);
-      const isOutsideRegister = registerRef.current && !registerRef.current.contains(event.target);
-      
-      if (isOutsideLogin) {
-        setIsLoginOpen(false);
-      }
-      if (isOutsideRegister) {
-        setIsRegisterOpen(false);
-      }
-    }
-    // Using 'mousedown' is generally better for dropdowns than 'click'
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  // MODIFIED: Toggle Handlers with e.stopPropagation() for mobile reliability
-  const toggleLogin = (e) => {
-    e.stopPropagation(); // Prevents the click from immediately triggering handleClickOutside on document
-    setIsLoginOpen(!isLoginOpen);
-    setIsRegisterOpen(false); // Close the other one
+  // MODIFIED: Handlers now navigate directly to a new options page/route
+  // You must create these routes and components (e.g., LoginOptionsPage, RegisterOptionsPage)
+  const handleLoginClick = () => {
+    // Navigate to a dedicated page/route that shows the three login options
+    navigate('/login-options');
   };
 
-  const toggleRegister = (e) => {
-    e.stopPropagation(); // Prevents the click from immediately triggering handleClickOutside on document
-    setIsRegisterOpen(!isRegisterOpen);
-    setIsLoginOpen(false); // Close the other one
+  const handleRegisterClick = () => {
+    // Navigate to a dedicated page/route that shows the three registration options
+    navigate('/register-options');
   };
   
   const handleLogout = () => {
@@ -145,70 +125,30 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
             <>
               {/* Not Logged In Links / Giriş Yapılmamış Bağlantılar */}
               
-              {/* Giriş Yap - Click-to-Open Dropdown */}
-              {/* Ref added for outside click detection */}
-              <div className="relative" ref={loginRef}>
-                {/* Click handler added to button */}
+              {/* Giriş Yap - Direct Navigation to Options Page */}
+              {/* Removed ref and dropdown structure */}
+              <div className="relative">
                 <button 
-                  onClick={toggleLogin} 
+                  onClick={handleLoginClick} // MODIFIED: Use new handler
                   className="text-white hover:text-secondary-light px-2 py-1.5"
                 >
                   {/* Buton Metni Çevirisi */}
                   Giriş Yap
                 </button>
-                {/* Conditional visibility based on state */}
-                <div 
-                  className={`absolute right-0 w-48 bg-white rounded-md shadow-xl transition duration-300 ${
-                    isLoginOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-                  }`}
-                  // Removed style={{ marginTop: 0 }}
-                > 
-                  <Link to="/customer/login" className="block px-4 py-2 text-primary-dark hover:bg-gray-100 rounded-t-md" onClick={() => setIsLoginOpen(false)}>
-                    {/* Bağlantı Metni Çevirisi */}
-                    Müşteri Girişi
-                  </Link>
-                  <Link to="/restaurant/login" className="block px-4 py-2 text-primary-dark hover:bg-gray-100" onClick={() => setIsLoginOpen(false)}>
-                    {/* Bağlantı Metni Çevirisi */}
-                    Restoran Girişi
-                  </Link>
-                  <Link to="/delivery/login" className="block px-4 py-2 text-primary-dark hover:bg-gray-100 rounded-b-md" onClick={() => setIsLoginOpen(false)}>
-                    {/* Bağlantı Metni Çevirisi */}
-                    Teslimatçı Girişi
-                  </Link>
-                </div>
+                {/* REMOVED: Dropdown content */}
               </div>
 
-              {/* Kaydol - Click-to-Open Dropdown */}
-              {/* Ref added for outside click detection */}
-              <div className="relative" ref={registerRef}>
-                {/* Click handler added to button */}
+              {/* Kaydol - Direct Navigation to Options Page */}
+              {/* Removed ref and dropdown structure */}
+              <div className="relative">
                 <button 
-                  onClick={toggleRegister} 
+                  onClick={handleRegisterClick} // MODIFIED: Use new handler
                   className="bg-primary-dark text-white font-semibold py-1.5 px-4 rounded-full shadow-lg hover:bg-primary-dark/90 transition duration-200"
                 >
                   {/* Buton Metni Çevirisi */}
                   Kaydol
                 </button>
-                {/* Conditional visibility based on state */}
-                <div 
-                  className={`absolute right-0 w-48 bg-white rounded-md shadow-xl transition duration-300 ${
-                    isRegisterOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-                  }`}
-                  // Removed style={{ marginTop: 0 }}
-                >
-                  <Link to="/customer/register" className="block px-4 py-2 text-primary-dark hover:bg-gray-100 rounded-t-md" onClick={() => setIsRegisterOpen(false)}>
-                    {/* Bağlantı Metni Çevirisi */}
-                    Müşteri Kaydı
-                  </Link>
-                  <Link to="/restaurant/register" className="block px-4 py-2 text-primary-dark hover:bg-gray-100" onClick={() => setIsRegisterOpen(false)}>
-                    {/* Bağlantı Metni Çevirisi */}
-                    Restoran Kaydı
-                  </Link>
-                  <Link to="/delivery/register" className="block px-4 py-2 text-primary-dark hover:bg-gray-100 rounded-b-md" onClick={() => setIsRegisterOpen(false)}>
-                    {/* Bağlantı Metni Çevirisi */}
-                    Teslimatçı Kaydı
-                  </Link>
-                </div>
+                {/* REMOVED: Dropdown content */}
               </div>
             </>
           )}
