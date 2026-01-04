@@ -130,7 +130,6 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
               <div className="relative">
                 <button 
                   onClick={handleLoginClick} // MODIFIED: Use new handler
-                  className="text-white hover:text-secondary-light px-2 py-1.5"
                 >
                   {/* Buton Metni Çevirisi */}
                   Giriş Yap
