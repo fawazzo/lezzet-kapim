@@ -128,13 +128,13 @@ const Navbar = ({ onCartClick, cartItemCount }) => {
               {/* Giriş Yap - Direct Navigation to Options Page */}
               {/* Removed ref and dropdown structure */}
               <div className="relative">
-                <button 
-                  onClick={handleLoginClick} // MODIFIED: Use new handler
-                  className="text-white hover:text-secondary-light px-2 py-1.5"
-                >
-                  {/* Buton Metni Çevirisi */}
-                  Giriş Yap
-                </button>
+                <button
+  onClick={handleLoginClick}
+  className="text-white hover:text-secondary-light px-2 py-1.5"
+  style={{ cursor: 'pointer' }} // Add this inline style for testing
+>
+  Giriş Yap
+</button>
                 {/* REMOVED: Dropdown content */}
               </div>
 
